@@ -5,10 +5,12 @@ if(!require(dplyr)) install.packages("dplyr")
 library(dplyr)
 library(BiocGenerics)
 
+datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
+
 ## Read data from file | Do only once
-raw.clinical.data <- read.delim("TCGA-READ.GDC_phenotype.tsv", row.names=1)
-raw.survival.data <- read.delim("TCGA-READ.survival.tsv", row.names=1)
-raw.expression.data <- read.delim("TCGA-READ.htseq_fpkm-uq.tsv", row.names=1)
+raw.clinical.data <- read.delim(paste0(datadir, "TCGA-READ.GDC_phenotype.tsv"), row.names=1)
+raw.survival.data <- read.delim(paste0(datadir, "TCGA-READ.survival.tsv"), row.names=1)
+raw.expression.data <- read.delim(paste0(datadir, "TCGA-READ.htseq_fpkm-uq.tsv"), row.names=1)
 # if only one gene expression is 0, remove the entire row.
 raw.expression.data[raw.expression.data == 0] <- NA
 raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]

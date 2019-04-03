@@ -2,8 +2,10 @@ library(CMScaller)
 library(irr)
 library(NMF)
 
+datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
+
 ## READ DATA ##
-exp.data <- read.table("cc.gene_count.set.vst.float.txt") # Read data in .txt format
+exp.data <- read.table(paste0(datadir, "cc.gene_count.set.vst.float.txt")) # Read data in .txt format
 exp.data <- as.matrix(exp.data) # convert into matrix
 ## DO ONLY ONCE ## TAKES LONG TIME ##
 
@@ -26,7 +28,7 @@ result.filtered <- result[filter.FDR, ] # Result filtered by FDR<0.05
 #### Compare to true data
 
 ## get true data
-truth.data <- read.csv("rectal_data_summary2_processed.csv")
+truth.data <- read.csv(paste0(datadir, "rectal_data_summary2_processed.csv"))
 truth.data[ ,"CMS_Caller"] <- paste0("CMS", truth.data[ ,"CMS_Caller"])
 truth.data[ ,"CMS_Caller"] <- as.factor(truth.data[ ,"CMS_Caller"])
 row.names(truth.data) <- truth.data[ ,1]
