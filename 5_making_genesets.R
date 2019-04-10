@@ -5,9 +5,7 @@
 library(CMScaller)
 library(dplyr)
 
-ensg <- expression.data
-row.names(ensg) <- gsub("\\..*","",row.names(ensg))
-symbol <- replaceGeneId(ensg, id.in="ensg", id.out="symbol")
+symbol <- expression.data
 
 # set threshold value
 thres <- 6.0
@@ -16,9 +14,6 @@ thres <- 6.0
 ##
 
 library(pamr)
-
-# Group 3 was distinct from the rest. Thus, we will compare group 3 to others.
-#bin.class <- as.integer(classifier == 3)
 
 # merge vectors of the class labels for each sample into a list 
 TCGA.data <- list(x=as.matrix(symbol), y=as.factor(classifier), 
@@ -41,7 +36,6 @@ pamr.geneplot(TCGA.train, TCGA.data, threshold=thres)
 
 gene.list <- as.data.frame(pamr.listgenes(TCGA.train, TCGA.data, threshold=thres, fitcv=TCGA.cv, genenames=FALSE))
 gene.list <- gene.list[complete.cases(gene.list), ]
-gene.list <- gene.list[- grep("NA[.]*", gene.list$id),]
 gene.list$id <- as.character(gene.list$id)
 
 indx <- sapply(gene.list, is.factor)
@@ -52,8 +46,7 @@ psic.threshold <- 0.6 # let's set it 0.6
 filter <- gene.list$`prop-selected-in-CV` >= psic.threshold
 gene.list <- gene.list[filter, ]
 
-#idx <- gene.list$`0-score` < gene.list$`1-score`
-#gene.list$classifier <- 1
-#gene.list$classifier[idx] <- 2
+gene.feature <- gene.list[ ,2:4]
+row.names(gene.feature) <- gene.list$id
+gene.feature <- as.data.frame(apply(gene.feature,1,which.max))
 
-gene.feature <- select(gene.list, id, classifier)

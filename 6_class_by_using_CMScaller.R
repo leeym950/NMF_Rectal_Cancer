@@ -10,7 +10,7 @@ exp.data <- as.matrix(exp.data) # convert into matrix
 ## DO ONLY ONCE ## TAKES LONG TIME ##
 
 ## Perform NTP analysis
-template <- gene.feature
+template <- cbind(row.names(gene.feature), gene.feature)
 colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)
 template$class <- as.factor(template$class)
