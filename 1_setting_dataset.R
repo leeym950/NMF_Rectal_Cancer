@@ -35,9 +35,9 @@ if(length(extract.from.expression.data) != 0) {
 } else {
   expression.data <- raw.expression.data
 }
-row.names(expression.data) <- gsub("\\..*","",row.names(expression.data))
-expression.data <- replaceGeneId(expression.data, id.in="ensg", id.out="symbol")
-expression.data <- expression.data[- grep("NA[.]*", row.names(expression.data)),]
+row.names(expression.data) <- gsub("\\..*","",row.names(expression.data)) # Renaming... delete substring after "."
+expression.data <- replaceGeneId(expression.data, id.in="ensg", id.out="symbol") # replace gene ID from Ensembl ID to HUGO symbol
+expression.data <- expression.data[- grep("NA[.]*", row.names(expression.data)),] # remove gene IDs that are not converted.
 
 if(length(extract.from.survival.data) != 0) {
   survival.data <- select(raw.survival.data, extract.from.survival.data)
