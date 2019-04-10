@@ -4,10 +4,11 @@
 if(!require(dplyr)) install.packages("dplyr")
 library(dplyr)
 library(BiocGenerics)
+library(CMScaller)
 
 datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
 
-## Read data from file | Do only once
+## Read data from file | "datadir" must be set | Do only once
 raw.clinical.data <- read.delim(paste0(datadir, "TCGA-READ.GDC_phenotype.tsv"), row.names=1)
 raw.survival.data <- read.delim(paste0(datadir, "TCGA-READ.survival.tsv"), row.names=1)
 raw.expression.data <- read.delim(paste0(datadir, "TCGA-READ.htseq_fpkm-uq.tsv"), row.names=1)
@@ -34,6 +35,9 @@ if(length(extract.from.expression.data) != 0) {
 } else {
   expression.data <- raw.expression.data
 }
+row.names(expression.data) <- gsub("\\..*","",row.names(expression.data))
+expression.data <- replaceGeneId(expression.data, id.in="ensg", id.out="symbol")
+expression.data <- expression.data[- grep("NA[.]*", row.names(expression.data)),]
 
 if(length(extract.from.survival.data) != 0) {
   survival.data <- select(raw.survival.data, extract.from.survival.data)

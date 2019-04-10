@@ -8,6 +8,8 @@ library(survminer)
 subset <- merge(survival.data, classifier, by='row.names', all=TRUE)
 
 subset <- subset[complete.cases(subset), ]
+temp <- subset$X_TIME_TO_EVENT < 2000
+subset <- subset[temp, ]
 colnames(subset)[5] <- "NMF_Classifier" # rename the column
 
 Surv.fit <-survfit(Surv(X_TIME_TO_EVENT, X_EVENT) ~ NMF_Classifier, data=subset)

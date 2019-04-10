@@ -8,6 +8,7 @@ library(NMF)
 #Calculation will be done @ Cluster
 #estim.rank <- nmf(expression.data, 2:8, nrun=50, seed=2019)
 
+# the .rds file is in the current directory, not in raw data directory
 estim.rank <- readRDS("estim_rank.rds")
 
 plot(estim.rank)
