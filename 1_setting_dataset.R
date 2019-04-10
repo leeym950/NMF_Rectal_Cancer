@@ -1,5 +1,5 @@
 ##
-## 1. Loading & Preparing data ####################################################################
+## 1. Importing data & Pre-processing ####################################################################
 ##
 if(!require(dplyr)) install.packages("dplyr")
 library(dplyr)
