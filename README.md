@@ -1,5 +1,7 @@
 # NMF_Rectal_Cancer
 
+# Introduction
+
 This file explains about this repository.
 
 1. Find a new classification for rectal cancer(not including colon cancer), by using NMF method.
