@@ -8,7 +8,7 @@ library(dplyr)
 symbol <- expression.data
 
 # set threshold value
-thres <- 6.0
+thres <- 5.0
 ##
 ## 4. making gene sets
 ##
@@ -34,6 +34,11 @@ pamr.plotcen(TCGA.train, TCGA.data, threshold=thres)
 ## making genesets...
 pamr.geneplot(TCGA.train, TCGA.data, threshold=thres)
 
+## if 'figure margins too large'
+#png(filename="geneplot.png", width=2000, height=2000)
+#pamr.geneplot(TCGA.train, TCGA.data, threshold=thres)
+#dev.off()
+
 gene.list <- as.data.frame(pamr.listgenes(TCGA.train, TCGA.data, threshold=thres, fitcv=TCGA.cv, genenames=FALSE))
 gene.list <- gene.list[complete.cases(gene.list), ]
 gene.list$id <- as.character(gene.list$id)
@@ -46,7 +51,7 @@ psic.threshold <- 0.6 # let's set it 0.6
 filter <- gene.list$`prop-selected-in-CV` >= psic.threshold
 gene.list <- gene.list[filter, ]
 
-gene.feature <- gene.list[ ,2:4]
+gene.feature <- gene.list[ ,2:3]
 row.names(gene.feature) <- gene.list$id
 gene.feature <- as.data.frame(apply(gene.feature,1,which.max))
 
