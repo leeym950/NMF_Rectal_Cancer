@@ -1,9 +1,13 @@
 ##
 ## 3_Perform NMF
 ##
+if(!require(NMF)){
+  install.packages("NMF")
+}
+library(NMF)
 
 ## by 2_find_NMF_rank.R
-r <- 3
+r <- 2
 
 result <- nmf(expression.data, rank=r, seed=2019)
 
