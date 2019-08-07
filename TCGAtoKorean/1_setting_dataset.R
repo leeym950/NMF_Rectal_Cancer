@@ -13,8 +13,8 @@ raw.clinical.data <- read.delim(paste0(datadir, "TCGA-READ.GDC_phenotype.tsv"), 
 raw.survival.data <- read.delim(paste0(datadir, "TCGA-READ.survival.tsv"), row.names=1)
 raw.expression.data <- read.delim(paste0(datadir, "TCGA-READ.htseq_fpkm-uq.tsv"), row.names=1)
 # if only one gene expression is 0, remove the entire row.
-raw.expression.data[raw.expression.data == 0] <- NA
-raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]
+raw.expression.data[raw.expression.data == 0] <- 0.001
+#raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]
 
 ## Type column names you want to extract
 ## If not set, all data will be extracted
