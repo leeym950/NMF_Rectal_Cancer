@@ -7,7 +7,7 @@ if(!require(NMF)){
 library(NMF)
 
 ## by 2_find_NMF_rank.R
-r <- 2
+r <- 3
 
 result <- nmf(expression.data, rank=r, seed=2019)
 

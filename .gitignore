@@ -7,3 +7,4 @@ estim_rank_random_fpkm.rds
 expression_data.rds
 genelist.csv
 .Rhistory
+*.pptx

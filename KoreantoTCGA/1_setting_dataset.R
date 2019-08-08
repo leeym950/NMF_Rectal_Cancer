@@ -12,7 +12,7 @@ datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
 raw.clinical.data <- read.delim(paste0(datadir, "rectal_data_summary2_processed.csv"), sep=',', row.names=1)
 raw.expression.data <- read.delim(paste0(datadir, "cc.gene_count.set.vst.float.txt"))
 # if only one gene expression is 0, remove the entire row.
-raw.expression.data[raw.expression.data == 0] <- NA
+raw.expression.data[raw.expression.data == 0] <- 0.001
 raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]
 
 ## Type column names you want to extract
