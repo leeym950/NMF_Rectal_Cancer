@@ -21,6 +21,7 @@ ggsurvplot(Surv.fit, data=subset,
 
 res <- pairwise_survdiff(Surv(survival.time, survival) ~ NMF_Classifier, data=subset)
 res
+summary(res)
 
 # Disease free survival
 Survfit <- survfit(Surv(DFS.time, recurrence) ~ NMF_Classifier, data=subset)
@@ -49,14 +50,3 @@ ggplot(data=subset, aes(NMF_Classifier, pCR)) +
 # pCR: barplot
 ggbarplot(data=subset, x="NMF_Classifier", y="pCR", add="mean",
           ylab="pCR proportion")
-
-# 5-year survival
-fiveyrsurv <- as.numeric(subset$survival.time >= 60)
-fiveyrfree <- as.numeric(subset$DFS.time >= 60)
-subset2 <- cbind(subset, fiveyrsurv, fiveyrfree)
-
-ggbarplot(data=subset2, x="NMF_Classifier", y="fiveyrsurv", add="mean",
-          ylab="5-yr survival rate", ylim=c(0, 0.5))
-
-ggbarplot(data=subset2, x="NMF_Classifier", y="fiveyrfree", add="mean",
-          ylab="5-yr disease free rate",ylim=c(0, 0.5))
