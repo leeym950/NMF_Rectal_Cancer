@@ -12,9 +12,15 @@ datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
 raw.clinical.data <- read.delim(paste0(datadir, "TCGA-READ.GDC_phenotype.tsv"), row.names=1)
 raw.survival.data <- read.delim(paste0(datadir, "TCGA-READ.survival.tsv"), row.names=1)
 raw.expression.data <- read.delim(paste0(datadir, "TCGA-READ.htseq_fpkm-uq.tsv"), row.names=1)
+
+# Convert GeneID from ENSG to Hugo Symbol
+row.names(raw.expression.data) <- gsub("\\..*","",row.names(raw.expression.data)) # Renaming... delete substring after "."
+raw.expression.data <- replaceGeneId(raw.expression.data, id.in="ensg", id.out="symbol") # replace gene ID from Ensembl ID to HUGO symbol
+raw.expression.data <- raw.expression.data[- grep("NA[.]*", row.names(raw.expression.data)),] # remove gene IDs that are not converted.
+
 # if only one gene expression is 0, remove the entire row.
-raw.expression.data[raw.expression.data == 0] <- 0.001
-#raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]
+raw.expression.data[raw.expression.data == 0] <- NA
+raw.expression.data <- raw.expression.data[complete.cases(raw.expression.data), ]
 
 ## Type column names you want to extract
 ## If not set, all data will be extracted
@@ -35,9 +41,6 @@ if(length(extract.from.expression.data) != 0) {
 } else {
   expression.data <- raw.expression.data
 }
-row.names(expression.data) <- gsub("\\..*","",row.names(expression.data)) # Renaming... delete substring after "."
-expression.data <- replaceGeneId(expression.data, id.in="ensg", id.out="symbol") # replace gene ID from Ensembl ID to HUGO symbol
-expression.data <- expression.data[- grep("NA[.]*", row.names(expression.data)),] # remove gene IDs that are not converted.
 
 if(length(extract.from.survival.data) != 0) {
   survival.data <- select(raw.survival.data, extract.from.survival.data)

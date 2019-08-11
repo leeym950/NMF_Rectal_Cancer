@@ -27,6 +27,6 @@ for (i in 1:nrow(subset)){
   shapiro[i] <- shapiro.test(subset[i, ])$p.value
 }
 # p-value threshold: 0.05
-length(which(shapiro <= 0.05)) # 7526 genes follow normality.
+length(which(shapiro <= 0.05)) # 7525 genes follow normality.
 length(which(shapiro > 0.05))  # 6222 genes do not follow normality.
 
