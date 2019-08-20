@@ -2,7 +2,7 @@ library(CMScaller)
 library(irr)
 library(NMF)
 
-datadir <- "C:/Users/leeym/Desktop/Personal/BI/Projects/Data/"
+datadir <- "D:/LYM/Projects/Data/"
 
 ## READ DATA ##
 sev.exp.data <- read.table(paste0(datadir, "cc.gene_count.set.vst.float.standrdized.txt")) # Read data in .txt format
@@ -12,8 +12,7 @@ sev.clinical.data <- read.table(paste0(datadir, "rectal_data_summary2_processed.
 
 ## Perform NTP analysis
 # prepare NTP template
-template <- rbind(cbind(metagene1, 1), cbind(metagene2, 2), cbind(metagene3, 3)) # if rank=2, metagene3 is not used
-template <- as.data.frame(template)
+template <- gene.feature
 colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)
 template$class <- as.factor(template$class)

@@ -8,7 +8,7 @@ library(NMF)
 ############################################################################
 ## This calculation takes long time. Recommend using high-power workstation or Cluster
 ############################################################################
-estim.rank <- nmf(expression.data, 2:5, nrun=10, seed=2019)
+estim.rank <- nmf(expression.data, 2:4, nrun=10, seed=2019)
 
 # I used Cluster and received results by RDS file.
 # the .rds file is in the current directory, not in raw data directory

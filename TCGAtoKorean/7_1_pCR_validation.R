@@ -13,4 +13,12 @@ chisq.test(table(subset2))
 ggbarplot(data=subset2, x="prediction", y="pCR", add="mean",
           ylab="pCR proportion", ylim=c(0, 0.5))
 
-           
+## for filtered data,
+filtered.subset2 <- select(filtered.subset, "prediction", "pCR")
+table(subset2)
+
+chisq.test(table(filtered.subset2))
+
+# pCR: barplot
+ggbarplot(data=filtered.subset2, x="prediction", y="pCR", add="mean",
+          ylab="pCR proportion", ylim=c(0, 0.5))
