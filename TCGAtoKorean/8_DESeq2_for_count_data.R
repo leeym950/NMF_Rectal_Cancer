@@ -24,44 +24,31 @@ count.expression.data <- read.delim(paste0(datadir, "TCGA-READ.htseq_counts.tsv.
 count.expression.data <- 2^count.expression.data -1 # data is log2(x+1) transformed. thus 2^ -1 for count value
 count.expression.data <- round(count.expression.data)
 
-## Perform NTP analysis for fpkm-uq data
-# prepare NTP template
-template <- gene.feature
-colnames(template) <- c("probe", "class")
-template$probe <- as.character(template$probe)
-template$class <- as.factor(template$class)
-
-expression.data.adjust <- ematAdjust(expression.data, normMethod="quantile")
-result <- ntp(expression.data.adjust, template, doPlot=TRUE, nPerm=1000)
-
-prediction <- result$prediction
-
 ## DESeq analysis
-
 dds <- DESeqDataSetFromMatrix(
   countData = count.expression.data,
-  colData = as.data.frame(prediction),
-  design = ~ prediction
+  colData = classifier, # 'classifier' is from NMF analysis
+  design = ~ classifier
 )
 
-deseq.result <- DESeq(dds, parallel=TRUE)
+deseq.result <- DESeq(dds)        # DESeq result // time consuming... You can use the saved RDS file instead.
+saveRDS(deseq.result, file="deseq_result.RDS") # Save the result as RDS file.
 
-summarized.result <- results(deseq.result)
+dds <- estimateSizeFactors(dds)
+deseq.norm.count <- counts(dds, normalized=TRUE) # DESeq normalized count
+deseq.norm.count <- log2(deseq.norm.count +1)    # log2(x+1) transformation
 
-# only padj < 0.05
-# Remove rows which padj is NA (all couts for this genes were 0, thus test was not applied)
-signif.deseq.result <- summarized.result[complete.cases(summarized.result), ]
-signif.deseq.result <- signif.deseq.result[signif.deseq.result$padj < 0.05, ]
+# Not needed if there are only 2 clusters
+resultAB <- results(deseq.result, contrast=c("classifier", "A", "B"))
+resultAB
+resultAC <- results(deseq.result, contrast=c("classifier", "A", "C"))
+resultAC
+resultBC <- results(deseq.result, contrast=c("classifier", "B", "C"))
+resultBC
 
-# Convert GeneID from ENSG to Hugo Symbol
-row.names(signif.deseq.result) <- gsub("\\..*","",row.names(signif.deseq.result)) # Renaming... delete substring after "."
-signif.deseq.result <- replaceGeneId(signif.deseq.result, id.in="ensg", id.out="symbol") # replace gene ID from Ensembl ID to HUGO symbol
-signif.deseq.result <- signif.deseq.result[- grep("NA[.]*", row.names(signif.deseq.result)),] # remove gene IDs that are not converted.
+plotMA(resultAC, ylim=c(-5,5))
 
+plotDispEsts(resultAB, ylim = c(1e-6, 1e3))
 
-plotMA(deseq.result, ylim=c(-5,5))
-
-plotDispEsts(deseq.result, ylim = c(1e-6, 1e3))
-
-hist(summarized.result$padj)
+hist(resultAB$padj)
 

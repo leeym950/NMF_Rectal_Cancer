@@ -37,7 +37,8 @@ pamr.plotcv(TCGA.cv)
 
 # set threshold
 # for rank=2, thres=4.4
-thres <- 4.4
+# for rank=3, thres=4.0
+thres <- 4.0
 
 # draw plot...
 pamr.plotcen(TCGA.train, TCGA.data, threshold=thres)
@@ -62,34 +63,6 @@ gene.list <- gene.list %>% group_by(id) %>% mutate_each(list(mean)) %>% distinct
 gene.feature <- gene.list[ ,2:(r+1)]
 gene.feature <- as.data.frame(apply(gene.feature,1,which.max))
 gene.feature <- cbind(gene.list$id, gene.feature)
-
-#################################
-#### Make cluster membership ####
-#################################
-
-# set threshold = 0 ; includes all genes
-thres <- 0
-
-# draw plot...
-pamr.plotcen(TCGA.train, TCGA.data, threshold=thres)
-
-## making genesets...
-memb.list <- as.data.frame(pamr.listgenes(TCGA.train, TCGA.data, threshold=thres, fitcv=TCGA.cv, genenames=FALSE))
-#memb.list <- gene.list[complete.cases(memb.list), ]
-memb.list$id <- as.character(memb.list$id)
-
-indx <- sapply(memb.list, is.factor)
-memb.list[indx] <- lapply(memb.list[indx], function(x) as.numeric(as.character(x)))
-
-memb.list <- memb.list %>% group_by(id) %>% mutate_each(list(mean)) %>% distinct # rows with same SYMBOL are aggregated.
-
-memb.feature <- memb.list[ ,2:(r+1)]
-memb.feature <- as.data.frame(apply(memb.feature,1,which.max))
-memb.feature <- cbind(memb.list$id, memb.feature)
-memb.feature <- memb.feature[complete.cases(memb.feature), ]
-
-
-
 
 
 

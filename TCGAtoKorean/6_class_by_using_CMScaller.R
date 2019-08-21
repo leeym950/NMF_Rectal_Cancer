@@ -17,12 +17,11 @@ colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)
 template$class <- as.factor(template$class)
 
-#sev.exp.data.adjust <- ematAdjust(sev.exp.data, normMethod="quantile") # NaNs produced
-result <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
-substring(row.names(result),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
+sev.ntp.sev.ntp.sev.ntp.result <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
+substring(row.names(sev.ntp.sev.ntp.sev.ntp.result),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
 
-subPairs(result)
+subPairs(sev.ntp.sev.ntp.sev.ntp.result)
 
 ## Filter by FDR
-filter.FDR <- result$FDR < 0.2
-result.filtered <- result[filter.FDR, ] # Result filtered by FDR<0.05
+filter.FDR <- sev.ntp.sev.ntp.result$FDR < 0.2
+sev.ntp.sev.ntp.result.filtered <- sev.ntp.sev.ntp.result[filter.FDR, ] # sev.ntp.sev.ntp.result filtered by FDR<0.05
