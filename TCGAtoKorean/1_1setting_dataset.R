@@ -2,8 +2,9 @@
 ## 1. Importing data & Pre-processing ####################################################################
 ##
 if(!require(dplyr)) install.packages("dplyr")
+if(!require(devtools)) install.packages("devtools")
+if(!require(CMScaller)) devtools::install_github("peterawe/CMScaller")
 library(dplyr)
-library(BiocGenerics)
 library(CMScaller)
 
 datadir <- "D:/LYM/Projects/Data/"

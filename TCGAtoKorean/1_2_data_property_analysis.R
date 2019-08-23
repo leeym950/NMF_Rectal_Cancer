@@ -1,5 +1,7 @@
 ##
 ## 1_2. Data property analysis
+if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(ggpubr)) install.packages("ggpubr")
 
 library(ggplot2)
 library(ggpubr)

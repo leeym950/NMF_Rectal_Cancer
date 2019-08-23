@@ -14,21 +14,19 @@ library(survminer)
 
 # deseq.norm.count : DESeq2 normalized count // from 8_DESeq2_for_count_data.R
 
-# Convert GeneID from ENSG to Hugo Symbol
-row.names(deseq.norm.count) <- gsub("\\..*","",row.names(deseq.norm.count)) # Renaming... delete substring after "."
-deseq.norm.count <- replaceGeneId(deseq.norm.count, id.in="ensg", id.out="symbol") # replace gene ID from Ensembl ID to HUGO symbol
-deseq.norm.count <- deseq.norm.count[- grep("NA[.]*", row.names(deseq.norm.count)),] # remove gene IDs that are not converted.
-
-# if only one gene expression is 0, replace it by 0.001
-deseq.norm.count[deseq.norm.count == 0] <- 0.001
-deseq.norm.count <- deseq.norm.count[complete.cases(deseq.norm.count), ]
-
 # x: sample
 # y: gene expressions
 boxplot(deseq.norm.count[1:50,])
 
+## Find NMF rank
+deseq.estim.rank <- nmf(deseq.norm.count, 2:5, nrun=30, seed=2019)
+saveRDS(deseq.estim.rank, file="deseq_estim_rank.RDS")
+
+plot(deseq.estim.rank)
+consensusmap(deseq.estim.rank)
+
 ## Set rank ( # of clusters)
-r <- 3
+r <- 2
 
 deseq.nmf.result <- nmf(deseq.norm.count, rank=r, seed=2019)
 
@@ -49,7 +47,8 @@ Surv.fit <-survfit(Surv(X_TIME_TO_EVENT, X_EVENT) ~ deseq_NMF_Classifier, data=d
 ggsurvplot(Surv.fit, data=deseq.subset,
            title="Survival by NMF predicted classifier", 
            legend="bottom",
-           xlab="Time (in days)")
+           xlab="Time (in days)",
+           pval=TRUE)
 
 res <- pairwise_survdiff(Surv(X_TIME_TO_EVENT, X_EVENT) ~ deseq_NMF_Classifier, data=deseq.subset)
 res

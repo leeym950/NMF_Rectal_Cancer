@@ -17,11 +17,11 @@ colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)
 template$class <- as.factor(template$class)
 
-sev.ntp.sev.ntp.sev.ntp.result <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
-substring(row.names(sev.ntp.sev.ntp.sev.ntp.result),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
+sev.ntp.result <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
+substring(row.names(sev.ntp.result),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
 
-subPairs(sev.ntp.sev.ntp.sev.ntp.result)
+subPairs(sev.ntp.result)
 
 ## Filter by FDR
-filter.FDR <- sev.ntp.sev.ntp.result$FDR < 0.2
-sev.ntp.sev.ntp.result.filtered <- sev.ntp.sev.ntp.result[filter.FDR, ] # sev.ntp.sev.ntp.result filtered by FDR<0.05
+filter.FDR <- sev.ntp.result$FDR < 0.2
+sev.ntp.result.filtered <- sev.ntp.result[filter.FDR, ] # sev.ntp.result filtered by FDR<0.05
