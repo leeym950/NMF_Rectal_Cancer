@@ -17,5 +17,5 @@ ggsurvplot(Surv.fit, data=subset,
            legend="bottom",
            xlab="Time (in days)")
 
-res <- pairwise_survdiff(Surv(X_TIME_TO_EVENT, X_EVENT) ~ NMF_Classifier, data=subset)
+res <- pairwise_survdiff(Surv(X_TIME_TO_EVENT, X_EVENT) ~ NMF_Classifier, data=subset) # for p-value calculation
 res

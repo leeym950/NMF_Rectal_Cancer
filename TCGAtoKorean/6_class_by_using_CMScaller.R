@@ -11,7 +11,7 @@ sev.clinical.data <- read.table(paste0(datadir, "rectal_data_summary2_processed.
 ## DO ONLY ONCE ## TAKES LONG TIME ##
 
 ## Perform NTP analysis
-# prepare NTP template
+# prepare NTP template from NMF classifiers
 template <- gene.feature
 colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)

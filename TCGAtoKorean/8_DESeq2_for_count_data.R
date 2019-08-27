@@ -4,8 +4,7 @@
 ##
 ##
 
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if(!require("DESeq2")) BiocManager::install("DESeq2")
 library(DESeq2)
 if(!require(dplyr)) install.packages("dplyr")

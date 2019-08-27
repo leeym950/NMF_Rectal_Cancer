@@ -22,7 +22,7 @@ library(edgeR)
 library(pamr)
 
 
-pam.data <- expression.data
+pam.data <- expression.data # copy the data, to not interrupt original data
 
 # merge vectors of the class labels for each sample into a list 
 TCGA.data <- list(x=as.matrix(pam.data), y=classifier,
@@ -42,7 +42,7 @@ pamr.plotcv(TCGA.cv)
 # for rank=3, thres=4.0
 thres <- 4.4
 
-# draw plot...
+# draw centroid plot
 pamr.plotcen(TCGA.train, TCGA.data, threshold=thres)
 
 ## making genesets...
@@ -65,7 +65,7 @@ gene.list <- gene.list %>% group_by(id) %>% mutate_each(list(mean)) %>% distinct
 gene.feature <- gene.list[ ,2:(r+1)]
 gene.feature <- as.data.frame(apply(gene.feature,1,which.max))
 gene.feature <- cbind(gene.list$id, gene.feature)
-
+# gene.feature now has gene symbols and corresponding classifiers.
 
 
 

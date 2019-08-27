@@ -7,9 +7,10 @@
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if(!require(fgsea)) BiocManager::install("fgsea")
 if(!require(qusage)) BiocManager::install("qusage")
-
+if(!require(ggplot2)) install.packages("ggplot2")
 library(fgsea)
 library(qusage)
+library(ggplot2)
 
 # Create ranks
 gseaDat <- resultAB
@@ -60,4 +61,18 @@ ggplot(gsea.result, aes(reorder(pathway, NES), NES)) +
   labs(x="Pathway", y="Normalized Enrichment Score",
        title="Hallmark pathways NES from GSEA") + 
   theme_minimal()
-# dev.off()
+# dev.off()s
+
+## KEGG pathway analysis
+if(!require(clusterProfiler)) BiocManager::install("clusterProfiler")
+library(clusterProfiler)
+
+search_kegg_organism('hsa', by='kegg_code') #hsa for homo sapiens
+
+gseaDat2 <- replaceGeneId(gseaDat, id.in="symbol", id.out="entrez") # replace gene ID from Ensembl ID to HUGO symbol
+sigGenes <- row.names(gseaDat2)[ gseaDat2[ ,"padj"] < 0.05 &  !is.na(gseaDat2[ ,"padj"]) & abs(gseaDat2[ ,"log2FoldChange"]) > 1 ]
+sigGenes <- na.exclude(sigGenes)
+kk <- enrichKEGG(gene=sigGenes, organism="hsa")
+head(kk, n=10)
+
+browseKEGG(kk, 'hsa04020')
