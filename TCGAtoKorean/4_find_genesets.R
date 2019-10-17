@@ -12,7 +12,6 @@ if(!require(ggpubr)) install.packages("ggpubr")
 if(!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if(!require(edgeR)) BiocManager::install("edgeR")
 if(!require(pamr)) install.packages("pamr")
-
 library(dplyr)
 library(BiocGenerics)
 library(CMScaller)
@@ -66,11 +65,3 @@ gene.feature <- gene.list[ ,2:(r+1)]
 gene.feature <- as.data.frame(apply(gene.feature,1,which.max))
 gene.feature <- cbind(gene.list$id, gene.feature)
 # gene.feature now has gene symbols and corresponding classifiers.
-
-
-
-
-
-
-
-

@@ -2,7 +2,6 @@
 ## 3_Perform NMF
 ##
 if(!require(NMF)) install.packages("NMF")
-
 library(NMF)
 
 ## by 2_find_NMF_rank.R
