@@ -10,6 +10,8 @@ if(!require(CMScaller)) devtools::install_github("peterawe/CMScaller")
 library(dplyr)
 library(CMScaller)
 
+#### Select genes with 0 expression in fpkm.uq data ###############################################
+
 datadir <- "D:/LYM/Projects/Data/"
 
 ## Read data from file | "datadir" must be set | Do only once
@@ -32,12 +34,11 @@ gene.feature.0 <- gene.feature[gene.feature$`gene.list$id` %in% genes.for.NTP.0,
 gene.feature._0 <- gene.feature[!gene.feature$`gene.list$id` %in% genes.for.NTP.0, ] # which do not contains 0 values
 
 # -->> 589 / 700 genes were included.
-#### Group 1 : 25 / 72 classifiers
-#### Group 2 : 564 / 628 classifiers
+### Group 1 : 25 / 72 classifiers
+### Group 2 : 564 / 628 classifiers
 
-# ###########################
-# ## What are these genes? ##
-# ###########################
+
+#### What are these genes? ########################################################################
 
 ## Using DeSeq-normalized data,
 # Convert GeneID from ENSG to Hugo Symbol
@@ -67,9 +68,7 @@ deseq.norm.count.0 <- deseq.norm.count.0[complete.cases(deseq.norm.count.0), ]
 # Check normalizaion status.
 boxplot(deseq.norm.count.0)
 
-###################
-## GSEA analysis ##
-###################
+#### GSEA analysis ################################################################################
 
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if(!require(fgsea)) BiocManager::install("fgsea")
@@ -121,9 +120,8 @@ ggplot(gsea.result.0, aes(reorder(pathway, NES), NES)) +
   theme_minimal()
 # dev.off()s
 
-###################################
-## Survival analysis with 0 data ##
-##################################
+
+#### Survival analysis with 0 data ################################################################
 
 ## Perform NTP analysis with Severance data
 # prepare NTP template from NMF classifiers
@@ -189,9 +187,7 @@ res <- pairwise_survdiff(Surv(DFS.time, recurrence) ~ prediction, data=filtered.
 res
 # ----> Significant c p=0.0061
 
-####################################################
-## Repeat Survival analysis with _0(minus 0) data ##
-####################################################
+#### Repeat Survival analysis with _0(minus 0) data ###############################################
 
 ## Perform NTP analysis with Severance data
 # prepare NTP template from NMF classifiers
@@ -220,7 +216,7 @@ ggsurvplot(Surv.fit, title="Survival by NMF prediction", data=subset,
 
 res <- pairwise_survdiff(Surv(survival.time, survival) ~ prediction, data=subset)
 res
-# ----> NOT Significant c p=0.0.69
+# ----> NOT Significant c p=0.69
 
 ## Using survminer // for only FDR < 0.2
 Surv.fit <-survfit(Surv(survival.time, survival) ~ prediction, data=filtered.subset)
@@ -277,9 +273,9 @@ res
 # ## total 565 (/590) genes appeared to be significant.
 
 
-# ##############################################################################
-# ## Perform COX analysis to export genes which may affect disease prognosis. ##
-# ##############################################################################
+# 
+# #### Perform COX analysis to export genes which may affect disease prognosis. #####################
+# 
 # subset <- cbind(t(deseq.norm.count.0), raw.survival.data[colnames(deseq.norm.count.0), ]) #expression data has 181 samples, on the other hand, survival data has only 177 samples.
 # 
 # library(survival)
