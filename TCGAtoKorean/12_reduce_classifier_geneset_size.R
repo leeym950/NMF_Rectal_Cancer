@@ -40,57 +40,56 @@ TCGA.cv <- pamr.cv(TCGA.train, TCGA.data)
 pamr.plotcv(TCGA.cv)
 
 # set threshold
-thres.0 <- 5.5
+thres.small <- 6.1 # 5.5 is base setting
 
 # draw centroid plot
-pamr.plotcen(TCGA.train, TCGA.data, threshold=thres.0)
+pamr.plotcen(TCGA.train, TCGA.data, threshold=thres.small)
 
 ## making genesets...
 #pamr.geneplot(TCGA.train, TCGA.data, threshold=thres) # due to "figure margins too large" message
+gene.list.small <- as.data.frame(pamr.listgenes(TCGA.train, TCGA.data, threshold=thres.small, fitcv=TCGA.cv, genenames=FALSE))
+gene.list.small <- gene.list.small[complete.cases(gene.list.small), ]
+gene.list.small$id <- as.character(gene.list.small$id)
 
-gene.list.0 <- as.data.frame(pamr.listgenes(TCGA.train, TCGA.data, threshold=thres.0, fitcv=TCGA.cv, genenames=FALSE))
-gene.list.0 <- gene.list.0[complete.cases(gene.list.0), ]
-gene.list.0$id <- as.character(gene.list.0$id)
-
-indx.0 <- sapply(gene.list.0, is.factor)
-gene.list.0[indx.0] <- lapply(gene.list.0[indx.0], function(x) as.numeric(as.character(x)))
+indx.small <- sapply(gene.list.small, is.factor)
+gene.list.small[indx.small] <- lapply(gene.list.small[indx.small], function(x) as.numeric(as.character(x)))
 
 ## set prop-selected-in-cv threshold
 psic.threshold <- 0.6 # let's set it 0.6
-filter <- gene.list.0$`prop-selected-in-CV` >= psic.threshold
-gene.list.0 <- gene.list.0[filter, ]
+filter <- gene.list.small$`prop-selected-in-CV` >= psic.threshold
+gene.list.small <- gene.list.small[filter, ]
 
-gene.list <- gene.list %>% group_by(id) %>% mutate_each(list(mean)) %>% distinct # rows with same SYMBOL are aggregated.
+gene.list.small <- gene.list.small %>% group_by(id) %>% mutate_each(list(mean)) %>% distinct # rows with same SYMBOL are aggregated.
 
-gene.feature.0 <- gene.list.0[ ,2:(r+1)]
-gene.feature.0 <- as.data.frame(apply(gene.feature.0,1,which.max))
-gene.feature.0 <- cbind(gene.list.0$id, gene.feature.0)
+gene.feature.small <- gene.list.small[ ,2:(r+1)]
+gene.feature.small <- as.data.frame(apply(gene.feature.small,1,which.max))
+gene.feature.small <- cbind(gene.list.small$id, gene.feature.small)
 # gene.feature now has gene symbols and corresponding classifiers.
 
-## Total 174 genes!
+## Total 74 genes!
 
 #### CMS Classification with NEW classifiers ######################################################
 ## Perform NTP analysis with Severance data
 # prepare NTP template from NMF classifiers
-template <- gene.feature.0
+template <- gene.feature.small
 colnames(template) <- c("probe", "class")
 template$probe <- as.character(template$probe)
 template$class <- as.factor(template$class)
 
-sev.ntp.result.0 <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
-substring(row.names(sev.ntp.result.0),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
+sev.ntp.result.small <- ntp(sev.exp.data, template, doPlot=TRUE, nPerm=1000)
+substring(row.names(sev.ntp.result.small),4,4) <- "-" # genes.RPS row names are in KR0.0000 but in Dataset, it's KR0-0000. Thus change .(dot) to "-"
 
 ## Filter by FDR
-filter.FDR.0 <- sev.ntp.result.0$FDR < 0.2
-sev.ntp.result.filtered.0 <- sev.ntp.result.0[filter.FDR.0, ] # sev.ntp.result filtered by FDR<0.05
+filter.FDR.small <- sev.ntp.result.small$FDR < 0.2
+sev.ntp.result.filtered.small <- sev.ntp.result.small[filter.FDR.small, ] # sev.ntp.result filtered by FDR<0.05
 
 
 ## Kaplan-Meyer analysis
 library(survival)
 library(survminer)
 
-subset <- cbind(sev.clinical.data, sev.ntp.result.0)
-filtered.subset <- subset[filter.FDR.0, ]
+subset <- cbind(sev.clinical.data, sev.ntp.result.small)
+filtered.subset <- subset[filter.FDR.small, ]
 
 ## Using survminer
 Surv.fit <-survfit(Surv(survival.time, survival) ~ prediction, data=subset)
